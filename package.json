@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate:html": "asyncapi generate html ./equestrian-data-specification.yaml -o ./docs"
+    "generate:html": "asyncapi generate html ./asyncapi/equestrian-data-specification.yaml -o ./docs"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
   },
   "homepage": "https://gitlab.com/clipmyhorsetv/documentation/equestrian-data-specification#readme",
   "dependencies": {
-    "@asyncapi/cli": "^2.16.0",
+    "@asyncapi/cli": "^2.0.0",
     "@asyncapi/html-template": "^3.1.0"
   }
 }

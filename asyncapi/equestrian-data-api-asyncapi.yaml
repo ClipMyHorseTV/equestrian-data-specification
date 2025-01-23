@@ -514,11 +514,46 @@ components:
                             description: Score data.
                             schema: '#/components/schemas/ScoreData'
 
+        CompetitorRemovedData:
+            type: object
+            properties:
+                data:
+                    type: object
+                    description: Event payload.
+                    properties:
+                        CompetitionIdentifiers:
+                            type: array
+                            description: Identifiers of the competition.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        CompetitorIdentifiers:
+                            type: array
+                            description: List of competitors.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+
+        CompetitorAddedData:
+            type: object
+            properties:
+                data:
+                    type: object
+                    description: Event payload.
+                    properties:
+                        CompetitionIdentifiers:
+                            type: array
+                            description: Identifiers of the competition.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        Competitor:
+                            type: object
+                            description: Competitor entity.
+                            $ref: '#/components/schemas/Competitor'
+
     messages:
         org.equestriandata.event.published:
             name: org.equestriandata.event.published
             title: A new event was published.
-            summary: Notification about a newly created horse sport event.
+            summary: Notification about a newly created horse sport event that didn't exist before in the system sending the event.
             contentType: application/json
             tags:
                 - name: events
@@ -529,7 +564,18 @@ components:
 
         org.equestriandata.competition.published:
             name: org.equestriandata.competition.published
-            title: A new competition for an event was published.
+            title: A new competition for an event was published that didn't exist before in the system.
+            contentType: application/json
+            tags:
+                - name: competition
+            payload:
+                allOf:
+                    - $ref: '#/components/schemas/CloudEvent'
+                    - $ref: '#/components/schemas/CompetitionPublishedData'
+
+        org.equestriandata.competition.time.changed:
+            name: org.equestriandata.competition.time.changed
+            title: The start or end date or time of a competition was changed.
             contentType: application/json
             tags:
                 - name: competition
@@ -571,6 +617,58 @@ components:
                     - $ref: '#/components/schemas/CloudEvent'
                     - $ref: '#/components/schemas/ResultPublishedData'
 
+        org.equestriandata.competitor.removed:
+            name: org.equestriandata.competitor.removed
+            title: A competitor was removed from a competition.
+            contentType: application/json
+            tags:
+                - name: competition
+            payload:
+                allOf:
+                    - $ref: '#/components/schemas/CloudEvent'
+                    - $ref: '#/components/schemas/CompetitorRemovedData'
+
+        org.equestriandata.competitor.added:
+            name: org.equestriandata.competitor.added
+            title: A competitor was added to a competition.
+            contentType: application/json
+            tags:
+                - name: competition
+            payload:
+                allOf:
+                    - $ref: '#/components/schemas/CloudEvent'
+                    - $ref: '#/components/schemas/CompetitorAddedData'
+
+        org.equestriandata.competitor.withdrew:
+            name: org.equestriandata.competitor.result.withdrew
+            title: A competitor withdrew from a competition.
+            contentType: application/json
+            tags:
+                - name: competition
+            payload:
+                allOf:
+                    - $ref: '#/components/schemas/CloudEvent'
+
+        org.equestriandata.competitor.rank.updated:
+            name: org.equestriandata.competitor.rank.changed
+            title: The rank of a competitor in a competition was changed.
+            contentType: application/json
+            tags:
+                - name: competition
+            payload:
+                allOf:
+                    - $ref: '#/components/schemas/CloudEvent'
+
+        org.equestriandata.competition.start.order.changed:
+            name: org.equestriandata.competition.start.order.changed
+            title: The start order of a competition was changed.
+            contentType: application/json
+            tags:
+                - name: competition
+            payload:
+                allOf:
+                    - $ref: '#/components/schemas/CloudEvent'
+
 ## DONE
   #Event erstellt
   #Wenn der Datenprovider ein Event erstellt oder published, also das erste mal ein Event veröffentlicht.
@@ -578,6 +676,10 @@ components:
   #Wenn der Datenprovider einen Wettkampf veröffentlicht. Das kann sein, dass er einzeln die Wettkämpfe veröffentlicht oder das es eine Liste von Wettkämpfen sind.
   #Competitor List create
   #Wenn der Datenprovider eine Teilnehmerliste veröffentlicht, die zu einem Wettkampf gehört
+#Result Published
+  #Wenn der Datenprovider für einen Teilnehmer eines Wettkampfes ein Ergebnis vorliegen hat
+  #Result Updated
+  #Wenn der Datenprovider ein Ergebnis aktualisiert, z.B sich der Wert des Ergebnisses verändert oder sich der Rank verändert, weil andere Teilnehmer besser sind.
 
 ## TODO
 
@@ -588,7 +690,3 @@ components:
 
 #Competitor List update
 #Wenn der Datenprovider eine Teilnehmerliste verändert, weil sich z.B die Startreihenfolge geändert hat oder ein Reiter hinzugekommen ist.
-#Result Published
-#Wenn der Datenprovider für einen Teilnehmer eines Wettkampfes ein Ergebnis vorliegen hat
-#Result Updated
-#Wenn der Datenprovider ein Ergebnis aktualisiert, z.B sich der Wert des Ergebnisses verändert oder sich der Rank verändert, weil andere Teilnehmer besser sind.
