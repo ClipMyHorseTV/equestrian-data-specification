@@ -7,7 +7,13 @@ This repository contains the specification and OpenAPI and AsyncAPI definitions 
 * Async API for the Events
 * Cloud Events Specification
 
-# License & Copyright
+## Generator Usage
+
+Run `npm install` to install the generator locally.
+
+ - https://www.asyncapi.com/docs/tools/generator/usage
+
+## License & Copyright
 
 Apache 2.0
 
