@@ -1,0 +1,259 @@
+asyncapi: '3.0.0'
+
+info:
+    title: Equestrian Data Events APIs
+    version: '0.1.0'
+    description: This API describes events related to horse sports.
+    termsOfService: 'https://www.equestriandata.org/terms'
+    license:
+        name: Apache 2.0
+        url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+    contact:
+        name: Equestrian Data API Support
+        url: 'https://www.equestriandata.org/support'
+    tags:
+        - name: events
+          description: Events related to horse sports.
+        - name: horses
+          description: Horse related events
+        - name: riders
+          description: Rider related events
+        - name: results
+          description: Events related to results in competitions.
+
+channels:
+  lightMeasured:
+    address: 'event-ingest'
+    messages:
+      EventCreated:
+        $ref: '#/components/messages/EventCreated'
+
+components:
+    schemas:
+        CloudEvent:
+            description: Cloud Events are a specification for describing event data in a common way.
+            type: object
+            properties:
+                specversion:
+                    type: string
+                    description: CloudEvents specification version.
+                    enum: ["1.0"]
+                type:
+                    type: string
+                    description: Type of the event.
+                    example: "org.equestriandata.event.created"
+                source:
+                    type: string
+                    description: Source of the event.
+                    example: https://github.com/cloudevents/spec/pull
+                id:
+                    type: string
+                    description: Unique identifier of the event instance.
+                    example: "3a3d60f8-5c91-4e5a-a6ed-b05b6d7b3a43"
+                time:
+                    type: string
+                    format: date-time
+                    description: Timestamp of when the event was produced.
+                    example: 2018-04-05T17:31:00Z
+                datacontenttype:
+                    type: string
+                    description: Content type of the event data.
+                    enum: ["application/json"]
+        LastUpdatedOn:
+            type: string
+            format: date-time
+            example: "2007-03-01T13:00:00Z"
+            description: Timestamp of when the entity was last updated.
+        Country:
+            type: object
+            description: Country where the event is held. A valid country object **MUST** contain at least one valid identifier.
+            properties:
+                iso2:
+                    type: string
+                    description: ISO 3166-1 alpha-2 country code.
+                    example: DE
+                    length: 2
+                iso3:
+                    type: string
+                    description: ISO 3166-1 alpha-3 country code.
+                    example: DEU
+                    length: 3
+                ioc:
+                    type: string
+                    description: International Olympic Committee country code.
+                    example: GER
+                    length: 3
+        GeoLocation:
+            type: object
+            description: Describes a geo coordinate based on [ISO 6709](https://en.wikipedia.org/wiki/ISO_6709).
+            properties:
+                Latitude:
+                    type: number
+                    description: Latitude of the place.
+                    example: 50.776351
+                Longitude:
+                    type: number
+                    description: Longitude of the place.
+                    example: 6.083862
+        LocalizedText:
+            type: object
+            description: Localized text based on [ISO 639](https://en.wikipedia.org/wiki/ISO_639).
+            properties:
+                locale:
+                    type: string
+                    description: Language code of the text based on [ISO 639](https://en.wikipedia.org/wiki/ISO_639).
+                    example: en
+                text:
+                    type: string
+                    description: Localized text.
+                    example: "Aachen"
+        Identifier:
+            type: object
+            description: An identifier is a composite value object of the provider and a value of the identifier. The reason for that is that different systems use very different identifiers and transferring data from one system to another might involve cases in which more than one provider is required as well.
+            properties:
+                value:
+                    type: string
+                    description: Unique identifier of the entity.
+                    example: 12345
+                type:
+                    type: string
+                    description: Type of the identifier.
+                    example: "FEI"
+                    enum: [UUID, INTEGER, STRING]
+                provider:
+                    type: string
+                    description: Provider of the identifier.
+                    example: "FEI"
+
+        EventCreatedData:
+            type: object
+            description: Event payload.
+            properties:
+                Identifiers:
+                    type: array
+                    description: Identifiers of the event.
+                    example: Aachen 2020
+                OrganizerIdentifiers:
+                    type: array
+                    description: Identifiers of the event organizer.
+                EventName:
+                    type: string
+                    description: Name of the event.
+                Description:
+                    type: string
+                    description: Description of the event.
+                StartDate:
+                    type: string
+                    format: date-time
+                    description: Start date of the event.
+                    example: 2007-03-01T13:00:00Z
+                EndDate:
+                    type: string
+                    format: date-time
+                    description: End date of the event.
+                    example: 2007-03-01T13:00:00Z
+                Country:
+                    type: object
+                    description: Country where the event is held.
+                    properties:
+                        Name:
+                            type: string
+                            description: Name of the country.
+                        Code:
+                            type: string
+                            description: ISO 3166-1 alpha-2 country code.
+                LastUpdatedOn:
+                    $ref: '#/components/schemas/LastUpdatedOn'
+
+    messages:
+        Test:
+            name: EventCreated
+            title: Event Created Notification
+            summary: Notification about a newly created horse sport event.
+            contentType: application/json
+            tags:
+                - name: events
+            payload:
+                allOf:
+                    - $ref: '#/components/schemas/CloudEvent'
+                    - type: object
+                      properties:
+                          data:
+                              type: object
+                              $ref: '#/components/schemas/EventCreatedData'
+
+        EventCreated:
+            name: EventCreated
+            title: Event Created Notification
+            summary: Notification about a newly created horse sport event.
+            contentType: application/json
+            tags:
+                - name: events
+            payload:
+                type: object
+                properties:
+                    specversion:
+                        type: string
+                        description: CloudEvents specification version.
+                        enum: ["1.0"]
+                    type:
+                        type: string
+                        description: Type of the event.
+                        enum: ["org.equestriandata.event.created"]
+                    source:
+                        type: string
+                        description: Source of the event.
+                        example: https://github.com/cloudevents/spec/pull
+                    id:
+                        type: string
+                        description: Unique identifier of the event instance.
+                        example: "3a3d60f8-5c91-4e5a-a6ed-b05b6d7b3a43"
+                    time:
+                        type: string
+                        format: date-time
+                        description: Timestamp of when the event was produced.
+                        example: 2018-04-05T17:31:00Z
+                    datacontenttype:
+                        type: string
+                        description: Content type of the event data.
+                        enum: ["application/json"]
+                    data:
+                        type: object
+                        description: Event payload.
+                        properties:
+                            Identifiers:
+                                type: array
+                                description: Identifiers of the event.
+                                example: Aachen 2020
+                            OrganizerIdentifiers:
+                                type: array
+                                description: Identifiers of the event organizer.
+                            EventName:
+                                type: string
+                                description: Name of the event.
+                            Description:
+                                type: string
+                                description: Description of the event.
+                            StartDate:
+                                type: string
+                                format: date-time
+                                description: Start date of the event.
+                                example: 2007-03-01T13:00:00Z
+                            EndDate:
+                                type: string
+                                format: date-time
+                                description: End date of the event.
+                                example: 2007-03-01T13:00:00Z
+                            Country:
+                                type: object
+                                description: Country where the event is held.
+                                properties:
+                                    Name:
+                                        type: string
+                                        description: Name of the country.
+                                    Code:
+                                        type: string
+                                        description: ISO 3166-1 alpha-2 country code.
+                            LastUpdatedOn:
+                                $ref: '#/components/schemas/LastUpdatedOn'
+

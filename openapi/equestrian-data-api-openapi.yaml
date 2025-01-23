@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+    title: Equestrian Data API
+    version: 0.1.0
+
+servers:
+    -   url: https://equestrian-data.clipmyhorse.tv
+        description: Production server
+    -   url: https://stage.equestrian-data.clipmyhorse.tv
+        description: Stage server
+    -   url: http://equestrian-data.test
+        description: Local development server
+
+components:
+    securitySchemes:
+        BearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+
+paths:
+    /event-ingest:
+        post:
+            summary: Ingest point for equestrian events
+            description: The endpoint is used to ingest equestrian events into the system.
+            security:
+                -   BearerAuth: [ ]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+            responses:
+                '202':
+                    description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
+                '422':
+                    description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
