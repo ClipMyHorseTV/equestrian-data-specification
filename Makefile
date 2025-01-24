@@ -6,5 +6,5 @@ help:
 	@echo "  async-docs                 - Generate HTML documentation from the AsyncAPI document"
 
 async-docs:
-	npx asyncapi generate fromTemplate asyncapi/equestrian-data-api-asyncapi.yaml @asyncapi/html-template -o ./asnycapi/docs
+	npx asyncapi generate fromTemplate asyncapi/equestrian-data-api-asyncapi.yaml @asyncapi/html-template -o ./asyncapi/docs
 
