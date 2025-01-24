@@ -3,14 +3,14 @@ asyncapi: '3.0.0'
 info:
     title: Equestrian Data Events APIs
     version: '0.1.0'
-    description: This API describes events related to horse sports.
-    termsOfService: 'https://www.equestriandata.org/terms'
+    description: This API describes events related to the horse sport domain.
+    #termsOfService: 'https://www.equestriandata.org/terms'
     license:
         name: Apache 2.0
         url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
-    contact:
-        name: Equestrian Data API Support
-        url: 'https://www.equestriandata.org/support'
+    #contact:
+    #    name: Equestrian Data API Support
+    #    url: 'https://www.equestriandata.org/support'
     tags:
         - name: events
           description: Events related to horse sports.
@@ -160,6 +160,11 @@ components:
                 gender:
                     type: string
                     enum: [stallion, mare, gelding]
+                color:
+                    type: string
+                    description: A free form text field for the color of the horse.
+                normativeColor:
+                    $ref: '#/components/schemas/NormativeColor'
 
         LastUpdatedOn:
             type: string
@@ -275,6 +280,10 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/Horse'
+                rank:
+                    type: integer
+                    description: Rank of the competitor.
+                    example: 1
                 lastUpdatedOn:
                     $ref: '#/components/schemas/LastUpdatedOn'
 
@@ -354,6 +363,11 @@ components:
                     type: integer
                     description: Penalty points of the competitor.
                     example: 2
+
+        NormativeColor:
+            type: string
+            description: Normative color. This is a standardized list of colors.
+            enum: [Black, Brown, Bay-brown, Bay, Chestnut, Grey, Strawberry, Piebald, Skewbald, Dun, Cream, Polomino, Appaloosa]
 
         JumpingScoreData:
             type: object
@@ -473,6 +487,22 @@ components:
                             enum: [ShowJumping, Racing, NeedsToBeDefined]
                         LastUpdatedOn:
                             $ref: '#/components/schemas/LastUpdatedOn'
+
+        CompetitorRankUpdated:
+            type: object
+            properties:
+                data:
+                    type: object
+                    description: Event payload.
+                    properties:
+                        CompetitionIdentifiers:
+                            type: array
+                            description: Identifiers of the competitor.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        Rank:
+                            type: integer
+                            description: Rank of the competitor.
 
         CompetitorListPublishedData:
             type: object
