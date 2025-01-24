@@ -19,6 +19,7 @@
   "homepage": "https://gitlab.com/clipmyhorsetv/documentation/equestrian-data-specification#readme",
   "dependencies": {
     "@asyncapi/cli": "^2.0.0",
-    "@asyncapi/html-template": "^2.0.0"
+    "@asyncapi/html-template": "^2.0.0",
+    "@openapitools/openapi-generator-cli": "^2.16.2"
   }
 }
