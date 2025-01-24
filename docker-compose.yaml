@@ -1,0 +1,25 @@
+services:
+    node:
+        image: node:18
+        working_dir: /app
+        volumes:
+            - .:/app
+        command: sh -c "npm install && tail -f /dev/null"
+        ports:
+            - "3000:3000"
+        environment:
+            - NODE_ENV=development
+
+    openapi-docs:
+        image: node:18
+        working_dir: /app
+        volumes:
+            - .:/app
+        command: sh -c "npx openapi-generator-cli generate -i openapi/equestrian-data-api.yaml -g html -o openapi/docs"
+
+    asyncapi-docs:
+        image: node:18
+        working_dir: /app
+        volumes:
+            - .:/app
+        command: sh -c "npx asyncapi generate fromTemplate asyncapi/equestrian-data-api-asyncapi.yaml @asyncapi/html-template -o asyncapi/docs"
