@@ -33,6 +33,13 @@ components:
         CloudEvent:
             description: Cloud Events are a specification for describing event data in a common way.
             type: object
+            required:
+                - specversion
+                - type
+                - source
+                - id
+                - time
+                - datacontenttype
             properties:
                 specversion:
                     type: string
@@ -75,6 +82,7 @@ components:
                 identifiers:
                     type: array
                     description: Identifiers of the person.
+                    minItems: 1
                     items:
                         $ref: '#/components/schemas/Identifier'
                 title:
@@ -111,6 +119,8 @@ components:
         PreviousHorseName:
             type: object
             description: Previous name of the horse.
+            required:
+                - name
             properties:
                 name:
                     type: string
@@ -137,6 +147,7 @@ components:
                 identifiers:
                     type: array
                     description: Identifiers of the horse.
+                    minItems: 1
                     items:
                         $ref: '#/components/schemas/Identifier'
                 currentName:
@@ -178,6 +189,10 @@ components:
         Country:
             type: object
             description: Country where the event is held. A valid country object **MUST** contain at least one valid identifier.
+            oneOf:
+                - required: [iso2]
+                - required: [iso3]
+                - required: [ioc]
             properties:
                 iso2:
                     type: string
@@ -222,6 +237,7 @@ components:
                     type: number
                     description: Longitude of the place.
                     example: 6.083862
+
         LocalizedText:
             type: object
             required:
@@ -240,9 +256,14 @@ components:
                     type: string
                     description: Localized text.
                     example: "Aachen"
+
         Identifier:
             type: object
             description: An identifier is a composite value object of the provider and a value of the identifier. The reason for that is that different systems use very different identifiers and transferring data from one system to another might involve cases in which more than one provider is required as well.
+            required:
+                - value
+                - type
+                - provider
             properties:
                 value:
                     type: string
@@ -251,7 +272,7 @@ components:
                 type:
                     type: string
                     description: Type of the identifier.
-                    example: "FEI"
+                    example: "UUID"
                     enum: [UUID, INTEGER, STRING]
                 provider:
                     type: string
@@ -270,6 +291,7 @@ components:
                 identifiers:
                     type: array
                     description: Identifiers of the competitor.
+                    minItems: 1
                     items:
                         $ref: '#/components/schemas/Identifier'
                 persons:
@@ -278,6 +300,7 @@ components:
                         $ref: '#/components/schemas/Person'
                 horses:
                     type: array
+                    minItems: 1
                     items:
                         $ref: '#/components/schemas/Horse'
                 rank:
@@ -328,12 +351,14 @@ components:
             properties:
                 competitorIdentifiers:
                     type: array
-                    description: Identifiers of the result.
+                    description: Identifiers of the competitor.
+                    minItems: 1
                     items:
                         $ref: '#/components/schemas/Identifier'
                 resultIdentifiers:
                     type: array
                     description: Identifiers of the result.
+                    minItems: 1
                     items:
                         $ref: '#/components/schemas/Identifier'
                 scoreSchema:
@@ -353,7 +378,7 @@ components:
             properties:
                 Score:
                     type: number
-                    description: Score of the jumping competition.
+                    description: Score of the dressage competition.
                     example: 0.0
                 Rank:
                     type: integer
@@ -400,38 +425,48 @@ components:
 
         EventPublishedData:
             type: object
+            required:
+                - data
             properties:
                 data:
                     type: object
                     description: Event payload.
+                    required:
+                        - Identifiers
+                        - OrganizerIdentifiers
+                        - EventName
+                        - StartDate
+                        - EndDate
                     properties:
                         Identifiers:
                             type: array
                             description: Identifiers of the event.
                             example: Aachen 2020
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         OrganizerIdentifiers:
                             type: array
                             description: Identifiers of the event organizer.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         EventName:
                             type: string
                             description: Name of the event.
                         Description:
-                            type: string
+                            $ref: '#/components/schemas/LocalizedText'
                             description: Description of the event.
                         StartDate:
                             type: string
-                            format: date-time
+                            format: date
                             description: Start date of the event.
-                            example: 2007-03-01T13:00:00Z
+                            example: 2007-12-20
                         EndDate:
                             type: string
-                            format: date-time
+                            format: date
                             description: End date of the event.
-                            example: 2007-03-01T13:00:00Z
+                            example: 2007-12-20
                         Country:
                             type: object
                             description: Country where the event is held.
@@ -447,50 +482,59 @@ components:
 
         CompetitionPublishedData:
             type: object
+            required:
+                - data
             properties:
                 data:
                     type: object
                     description: Event payload.
+                    required:
+                        - CompetitionIdentifiers
+                        - EventIdentifiers
+                        - CompetitionName
+                        - StartDate
                     properties:
                         CompetitionIdentifiers:
                             type: array
                             description: Identifiers of the competition.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         EventIdentifiers:
                             type: array
                             description: Identifiers of the event.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
-                        Name:
+                        CompetitionName:
                             type: string
                             description: Name of the competition.
                         SponsorTitle:
                             type: string
                             description: Sponsor Title
                         Description:
-                            type: string
+                            $ref: '#/components/schemas/LocalizedText'
                             description: Description of the competition.
                         StartDate:
                             type: string
-                            format: date-time
+                            format: date
                             description: Start date of the competition.
-                            example: 2007-03-01
+                            example: 2007-12-20
                         EndDate:
                             type: string
-                            format: date-time
+                            format: date
                             description: End date of the competition.
-                            example: 2007-03-01
+                            example: 2007-12-20
                         StartTime:
                             type: string
                             format: date-time
                             description: Start time of the competition. [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
-                            example: 2007-03-01T13:00:00Z
+                            example: 2007-12-20T13:00:00Z
                         EndTime:
                             type: string
                             format: date-time
                             description: End time of the competition. [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
-                            example: 2007-03-01T13:00:00Z
+                            example: 2007-12-20T13:00:00Z
                         Discipline:
                             type: string
                             description: Discipline of the competition, free form text.
@@ -519,46 +563,65 @@ components:
 
         CompetitorListPublishedData:
             type: object
+            required:
+                - data
             properties:
                 data:
                     type: object
                     description: Event payload.
+                    required:
+                        - CompetitionIdentifiers
+                        - Competitors
                     properties:
                         CompetitionIdentifiers:
                             type: array
                             description: Identifiers of the competition.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         Competitors:
                             type: array
                             description: List of competitors.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Competitor'
 
         ResultPublishedData:
             type: object
+            required:
+                - data
             properties:
                 data:
                     type: object
                     description: Event payload.
+                    required:
+                        - CompetitionIdentifiers
+                        - CompetitorIdentifiers
+                        - ScoreData
                     properties:
                         CompetitionIdentifiers:
                             type: array
                             description: Identifiers of the competition.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         CompetitorIdentifiers:
                             type: array
                             description: List of competitors.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         ScoreData:
                             type: object
                             description: Score data.
-                            schema: '#/components/schemas/ScoreData'
+                            minItems: 1
+                            schema:
+                                $ref: '#/components/schemas/ScoreData'
 
         CompetitorRemovedData:
             type: object
+            required:
+                - data
             properties:
                 data:
                     type: object
@@ -577,6 +640,8 @@ components:
 
         CompetitorAddedData:
             type: object
+            required:
+                - data
             properties:
                 data:
                     type: object
