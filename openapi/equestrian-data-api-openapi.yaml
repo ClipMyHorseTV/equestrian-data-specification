@@ -11,6 +11,210 @@ servers:
     -   url: http://equestrian-data.test
         description: Local development server
 
+paths:
+    /events/events/published:
+        post:
+            summary: Notification about a newly created horse sport event that didn't exist before in the system sending the event.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            properties:
+                              type:
+                                type: string
+                                example: org.equestriandata.event.published
+                            allOf:
+                                - $ref: '#/components/schemas/CloudEvent'
+                                - $ref: '#/components/schemas/EventPublishedData'
+            responses:
+                '202':
+                    description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
+                '422':
+                    description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
+
+    /events/competitions/published:
+        post:
+            summary: Notification about a newly created horse sport event that didn't exist before in the system sending the event.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            properties:
+                              type:
+                                type: string
+                                example: org.equestriandata.competition.published
+                            allOf:
+                                - $ref: '#/components/schemas/CloudEvent'
+                                - $ref: '#/components/schemas/CompetitionPublishedData'
+            responses:
+                '202':
+                    description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
+                '422':
+                    description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
+
+    /events/competitions/time-changed:
+        post:
+            summary: The start or end date or time of a competition was changed.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            properties:
+                              type:
+                                type: string
+                                example: org.equestriandata.competition.time-changed
+                            allOf:
+                                - $ref: '#/components/schemas/CloudEvent'
+                                - $ref: '#/components/schemas/CompetitionTimeChangedData'
+            responses:
+                '202':
+                    description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
+                '422':
+                    description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
+
+    /events/competitors/list-published:
+        post:
+            summary: A new competitor list for a competition was published.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            allOf:
+                                - $ref: '#/components/schemas/CloudEvent'
+                                - $ref: '#/components/schemas/CompetitionPublishedData'
+            responses:
+                '202':
+                    description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
+                '422':
+                    description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
+
+    /events/competitor/result-updated:
+        post:
+            summary: The result of a competitor in a competition was updated.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            properties:
+                              type:
+                                type: string
+                                example: org.equestriandata.competitor.result-updated
+                            allOf:
+                                - $ref: '#/components/schemas/CloudEvent'
+                                - $ref: '#/components/schemas/ResultPublishedData'
+            responses:
+                '202':
+                    description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
+                '422':
+                    description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
+
+    /events/competitor/removed:
+        post:
+            summary: A competitor was removed from a competition.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            properties:
+                              type:
+                                type: string
+                                example: org.equestriandata.competitor.removed
+                            allOf:
+                                - $ref: '#/components/schemas/CloudEvent'
+                                - $ref: '#/components/schemas/CompetitorRemovedData'
+            responses:
+                '202':
+                    description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
+                '422':
+                    description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
+
+    /events/competitor/added:
+        post:
+            summary: A competitor was added to a competition.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            properties:
+                              type:
+                                type: string
+                                example: org.equestriandata.competitor.added
+                            allOf:
+                                - $ref: '#/components/schemas/CloudEvent'
+                                - $ref: '#/components/schemas/CompetitorAddedData'
+            responses:
+                '202':
+                    description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
+                '422':
+                    description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
+
+    /events/competitor/withdrew:
+        post:
+            summary: A competitor withdrew from a competition.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            properties:
+                              type:
+                                type: string
+                                example: org.equestriandata.competitor.withdrew
+                            allOf:
+                                - $ref: '#/components/schemas/CloudEvent'
+            responses:
+                '202':
+                    description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
+                '422':
+                    description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
+
+    /events/competitor/rank-updated:
+        post:
+            summary: The rank of a competitor in a competition was changed.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            properties:
+                              type:
+                                type: string
+                                example: org.equestriandata.competitor.rank-updated
+                            allOf:
+                                - $ref: '#/components/schemas/CloudEvent'
+            responses:
+                '202':
+                    description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
+                '422':
+                    description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
+
+    /events/competition/start-order-changed:
+        post:
+            summary: The start order of a competition was changed.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            properties:
+                              type:
+                                type: string
+                                example: org.equestriandata.competition.start-order-changed
+                            allOf:
+                                - $ref: '#/components/schemas/CloudEvent'
+            responses:
+                '202':
+                    description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
+                '422':
+                    description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
+
 components:
     securitySchemes:
         BearerAuth:
@@ -18,21 +222,585 @@ components:
             scheme: bearer
             bearerFormat: JWT
 
-paths:
-    /event-ingest:
-        post:
-            summary: Ingest point for equestrian events
-            description: The endpoint is used to ingest equestrian events into the system.
-            security:
-                -   BearerAuth: [ ]
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
+    schemas:
+        CloudEvent:
+            description: Cloud Events are a specification for describing event data in a common way.
+            type: object
+            properties:
+                specversion:
+                    type: string
+                    description: CloudEvents specification version.
+                    enum: ["1.0"]
+                type:
+                    type: string
+                    description: Type of the event.
+                    example: "org.equestriandata.event.created"
+                source:
+                    type: string
+                    description: Source of the event.
+                    example: http://your-organization/events/event-created
+                id:
+                    type: string
+                    description: Unique identifier of the event instance.
+                    example: "3a3d60f8-5c91-4e5a-a6ed-b05b6d7b3a43"
+                time:
+                    type: string
+                    format: date-time
+                    description: Timestamp of when the event was produced.
+                    example: 2018-04-05T17:31:00Z
+                datacontenttype:
+                    type: string
+                    description: Content type of the event data.
+                    enum: ["application/json"]
+
+        NormativeDiscipline:
+            type: string
+            description: Normative discipline. This is a standardized list of disciplines.
+            enum: [Jumping, Dressage, Para Dressage, Eventing, Driving, Endurance, Vaulting, Breeding, Working Equitation, Polo, Racing, other]
+
+        Person:
+            type: object
+            required: 
+                - identifiers
+                - lastUpdatedOn
+            description: Person entity.
+            properties:
+                identifiers:
+                    type: array
+                    description: Identifiers of the person.
+                    items:
+                        $ref: '#/components/schemas/Identifier'
+                title:
+                    type: string
+                    description: Title of the person.
+                    example: "Dr."
+                firstName:
+                    type: string
+                    description: First name of the person.
+                    example: "John"
+                middleName:
+                    type: string
+                    description: Middle name of the person.
+                    example: "Doe"
+                lastName:
+                    type: string
+                    description: Last name of the person.
+                    example: "Doe"
+                dayOfBirth:
+                    type: string
+                    format: date-time
+                    description: Date of birth of the person.
+                    example: "2007-03-01"
+                yearOfBirth:
+                    type: integer
+                    description: Year of birth of the person.
+                    example: 2007
+                gender:
+                    type: string
+                    enum: [male, female, other]
+                lastUpdatedOn:
+                    $ref: '#/components/schemas/LastUpdatedOn'
+
+        PreviousHorseName:
+            type: object
+            description: Previous name of the horse.
+            properties:
+                name:
+                    type: string
+                    description: Name of the horse.
+                    example: "Secretariat"
+                fromDate:
+                    type: string
+                    format: date-time
+                    description: Start date of the name.
+                    example: "2007-03-01"
+                toDate:
+                    type: string
+                    format: date-time
+                    description: End date of the name.
+                    example: "2007-03-01"
+
+        Horse:
+            type: object
+            required:
+                - identifiers
+                - currentName
+            description: Horse entity.
+            properties:
+                identifiers:
+                    type: array
+                    description: Identifiers of the horse.
+                    items:
+                        $ref: '#/components/schemas/Identifier'
+                currentName:
+                    type: string
+                    description: Name of the horse.
+                    example: "Secretariat"
+                previousNames:
+                    type: array
+                    description: Previous names of the horse.
+                    items:
+                        $ref: '#/components/schemas/PreviousHorseName'
+                dayOfBirth:
+                    type: string
+                    format: date-time
+                    description: Date of birth of the person.
+                    example: "2007-03-01"
+                yearOfBirth:
+                    type: integer
+                    description: Year of birth of the person.
+                    example: 2007
+                gender:
+                    type: string
+                    enum: [stallion, mare, gelding]
+                color:
+                    type: string
+                    description: A free form text field for the color of the horse.
+                normativeColor:
+                    $ref: '#/components/schemas/NormativeColor'
+
+        LastUpdatedOn:
+            type: string
+            format: date-time
+            example: "2007-03-01T13:00:00Z"
+            description: Timestamp of when the entity was last updated. [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
+            externalDocs:
+                description: ISO 8601
+                url: https://en.wikipedia.org/wiki/ISO_8601
+
+        Country:
+            type: object
+            description: Country where the event is held. A valid country object **MUST** contain at least one valid identifier.
+            properties:
+                iso2:
+                    type: string
+                    description: ISO 3166-1 alpha-2 country code.
+                    example: DE
+                    externalDocs:
+                        description: ISO 3166-1 alpha-3
+                        url: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
+                iso3:
+                    type: string
+                    description: ISO 3166-1 alpha-3 country code.
+                    example: DEU
+                    externalDocs:
+                        description: ISO 3166-1 alpha-3
+                        url: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
+                ioc:
+                    type: string
+                    description: International Olympic Committee country code.
+                    example: GER
+                    externalDocs:
+                        description: IOC
+                        url: https://en.wikipedia.org/wiki/List_of_IOC_country_codes
+
+        GeoLocation:
+            type: object
+            required:
+                - latitude
+                - longitude
+            description: Describes a geo coordinate based on [ISO 6709](https://en.wikipedia.org/wiki/ISO_6709).
+            externalDocs:
+                description: ISO 6709
+                url: https://en.wikipedia.org/wiki/ISO_6709
+            properties:
+                latitude:
+                    type: number
+                    description: Latitude of the place.
+                    example: 50.776351
+                longitude:
+                    type: number
+                    description: Longitude of the place.
+                    example: 6.083862
+        LocalizedText:
+            type: object
+            required:
+              - locale
+              - text
+            description: Localized text based on [ISO 639](https://en.wikipedia.org/wiki/ISO_639).
+            externalDocs:
+                description: ISO 639
+                url: https://en.wikipedia.org/wiki/ISO_639
+            properties:
+                locale:
+                    type: string
+                    description: Language code of the text based on [ISO 639](https://en.wikipedia.org/wiki/ISO_639).
+                    example: en
+                text:
+                    type: string
+                    description: Localized text.
+                    example: "Aachen"
+        Identifier:
+            type: object
+            description: An identifier is a composite value object of the provider and a value of the identifier. The reason for that is that different systems use very different identifiers and transferring data from one system to another might involve cases in which more than one provider is required as well.
+            properties:
+                value:
+                    type: string
+                    description: Unique identifier of the entity.
+                    example: 12345
+                type:
+                    type: string
+                    description: Type of the identifier.
+                    example: "FEI"
+                    enum: [UUID, INTEGER, STRING]
+                provider:
+                    type: string
+                    description: Provider of the identifier.
+                    example: "FEI"
+
+        Competitor:
+            type: object
+            required:
+              - identifiers
+              - persons
+              - horses
+              - lastUpdatedOn
+            description: Competitor entity.
+            properties:
+                identifiers:
+                    type: array
+                    description: Identifiers of the competitor.
+                    items:
+                        $ref: '#/components/schemas/Identifier'
+                persons:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Person'
+                horses:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Horse'
+                rank:
+                    type: integer
+                    description: Rank of the competitor.
+                    example: 1
+                lastUpdatedOn:
+                    $ref: '#/components/schemas/LastUpdatedOn'
+
+        Address:
+            type: object
+            description: Address entity.
+            properties:
+                identifiers:
+                    type: array
+                    description: Identifiers of the address.
+                    items:
+                        $ref: '#/components/schemas/Identifier'
+                addressLine:
+                    type: string
+                    description: Street name and number.
+                    example: "Samplestreet 123"
+                addressLine2:
+                    type: string
+                    description: Used for additional address information.
+                    example: "Building A Room 123"
+                city:
+                    type: string
+                    description: City name.
+                    example: "Aachen"
+                postalCode:
+                    type: string
+                    description: Postal code.
+                    example: "52062"
+                country:
+                    $ref: '#/components/schemas/Country'
+                geoLocation:
+                    $ref: '#/components/schemas/GeoLocation'
+
+        ScoreData:
+            type: object
+            required:
+              - competitorIdentifiers
+              - resultIdentifiers
+              - scoreSchema
+              - scoreType
+              - score
+            properties:
+                competitorIdentifiers:
+                    type: array
+                    description: Identifiers of the result.
+                    items:
+                        $ref: '#/components/schemas/Identifier'
+                resultIdentifiers:
+                    type: array
+                    description: Identifiers of the result.
+                    items:
+                        $ref: '#/components/schemas/Identifier'
+                scoreSchema:
+                    type: string
+                    description: JSON Schema of the score.
+                    format: uri
+                scoreType:
+                    type: string
+                    description: Type of the score, **MUST** match the object in Score.
+                score:
+                    oneOf:
+                        - $ref: '#/components/schemas/JumpingScoreData'
+                        - $ref: '#/components/schemas/DressageScoreData'
+
+        DressageScoreData:
+            type: object
+            properties:
+                Score:
+                    type: number
+                    description: Score of the jumping competition.
+                    example: 0.0
+                Rank:
+                    type: integer
+                    description: Rank of the competitor.
+                    example: 1
+                PenaltyPoints:
+                    type: integer
+                    description: Penalty points of the competitor.
+                    example: 2
+
+        NormativeColor:
+            type: string
+            description: Normative color. This is a standardized list of colors.
+            enum: [Black, Brown, Bay-brown, Bay, Chestnut, Grey, Strawberry, Piebald, Skewbald, Dun, Cream, Polomino, Appaloosa]
+
+        Currency:
+            type: object
+            description: Currency entity.
+            properties:
+                value:
+                    type: number
+                    description: The value of the money. The value of the money using the comma decimal notation. Values must always specify the complete value, “11,00” instead of “11”.
+                    example: "123,41"
+                currency:
+                    type: string
+                    description: "[ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) 3 character currency code."
+                    example: "EUR"
+
+        JumpingScoreData:
+            type: object
+            properties:
+                Score:
+                    type: number
+                    description: Score of the jumping competition.
+                    example: 0.0
+                Rank:
+                    type: integer
+                    description: Rank of the competitor.
+                    example: 1
+                PenaltyPoints:
+                    type: integer
+                    description: Penalty points of the competitor.
+                    example: 2
+
+        EventPublishedData:
+            type: object
+            properties:
+                data:
+                    type: object
+                    description: Event payload.
+                    properties:
+                        Identifiers:
+                            type: array
+                            description: Identifiers of the event.
+                            example: Aachen 2020
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        OrganizerIdentifiers:
+                            type: array
+                            description: Identifiers of the event organizer.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        EventName:
+                            type: string
+                            description: Name of the event.
+                        Description:
+                            type: string
+                            description: Description of the event.
+                        StartDate:
+                            type: string
+                            format: date-time
+                            description: Start date of the event.
+                            example: 2007-03-01T13:00:00Z
+                        EndDate:
+                            type: string
+                            format: date-time
+                            description: End date of the event.
+                            example: 2007-03-01T13:00:00Z
+                        Country:
                             type: object
-            responses:
-                '202':
-                    description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
-                '422':
-                    description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
+                            description: Country where the event is held.
+                            properties:
+                                Name:
+                                    type: string
+                                    description: Name of the country.
+                                Code:
+                                    type: string
+                                    description: ISO 3166-1 alpha-2 country code.
+                        LastUpdatedOn:
+                            $ref: '#/components/schemas/LastUpdatedOn'
+
+        CompetitionPublishedData:
+            type: object
+            properties:
+                data:
+                    type: object
+                    description: Event payload.
+                    properties:
+                        CompetitionIdentifiers:
+                            type: array
+                            description: Identifiers of the competition.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        EventIdentifiers:
+                            type: array
+                            description: Identifiers of the event.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        Name:
+                            type: string
+                            description: Name of the competition.
+                        SponsorTitle:
+                            type: string
+                            description: Sponsor Title
+                        Description:
+                            type: string
+                            description: Description of the competition.
+                        StartDate:
+                            type: string
+                            format: date-time
+                            description: Start date of the competition.
+                            example: 2007-03-01
+                        EndDate:
+                            type: string
+                            format: date-time
+                            description: End date of the competition.
+                            example: 2007-03-01
+                        StartTime:
+                            type: string
+                            format: date-time
+                            description: Start time of the competition. [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
+                            example: 2007-03-01T13:00:00Z
+                        EndTime:
+                            type: string
+                            format: date-time
+                            description: End time of the competition. [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
+                            example: 2007-03-01T13:00:00Z
+                        Discipline:
+                            type: string
+                            description: Discipline of the competition, free form text.
+                        NormativeDiscipline:
+                            type: string
+                            description: Normative discipline of the competition.
+                            enum: [ShowJumping, Racing, NeedsToBeDefined]
+                        LastUpdatedOn:
+                            $ref: '#/components/schemas/LastUpdatedOn'
+
+        CompetitorRankUpdated:
+            type: object
+            properties:
+                data:
+                    type: object
+                    description: Event payload.
+                    properties:
+                        CompetitionIdentifiers:
+                            type: array
+                            description: Identifiers of the competitor.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        Rank:
+                            type: integer
+                            description: Rank of the competitor.
+
+        CompetitorListPublishedData:
+            type: object
+            properties:
+                data:
+                    type: object
+                    description: Event payload.
+                    properties:
+                        CompetitionIdentifiers:
+                            type: array
+                            description: Identifiers of the competition.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        Competitors:
+                            type: array
+                            description: List of competitors.
+                            items:
+                                $ref: '#/components/schemas/Competitor'
+
+        CompetitionTimeChangedData:
+            type: object
+            properties:
+                data:
+                    type: object
+                    description: Event payload.
+                    properties:
+                        CompetitionIdentifiers:
+                            type: array
+                            description: Identifiers of the competition.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        StartTime:
+                            type: string
+                            format: date-time
+                            description: Start time of the competition. [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
+                            example: 2007-03-01T13:00:00Z
+                        EndTime:
+                            type: string
+                            format: date-time
+                            description: End time of the competition. [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
+                            example: 2007-03-01T13:00:00Z
+
+        ResultPublishedData:
+            type: object
+            properties:
+                data:
+                    type: object
+                    description: Event payload.
+                    properties:
+                        CompetitionIdentifiers:
+                            type: array
+                            description: Identifiers of the competition.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        CompetitorIdentifiers:
+                            type: array
+                            description: List of competitors.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        ScoreData:
+                            type: object
+                            description: Score data.
+                            schema: '#/components/schemas/ScoreData'
+
+        CompetitorRemovedData:
+            type: object
+            properties:
+                data:
+                    type: object
+                    description: Event payload.
+                    properties:
+                        CompetitionIdentifiers:
+                            type: array
+                            description: Identifiers of the competition.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        CompetitorIdentifiers:
+                            type: array
+                            description: List of competitors.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+
+        CompetitorAddedData:
+            type: object
+            properties:
+                data:
+                    type: object
+                    description: Event payload.
+                    properties:
+                        CompetitionIdentifiers:
+                            type: array
+                            description: Identifiers of the competition.
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        Competitor:
+                            type: object
+                            description: Competitor entity.
+                            $ref: '#/components/schemas/Competitor'
