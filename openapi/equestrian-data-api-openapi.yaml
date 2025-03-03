@@ -12,7 +12,7 @@ servers:
         description: Local development server
 
 paths:
-    /events/events/published:
+    /events/event/published:
         post:
             summary: Notification about a newly created horse sport event that didn't exist before in the system sending the event.
             requestBody:
@@ -33,7 +33,7 @@ paths:
                 '422':
                     description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
 
-    /events/competitions/published:
+    /events/competition/published:
         post:
             summary: Notification about a newly created horse sport event that didn't exist before in the system sending the event.
             requestBody:
@@ -54,7 +54,7 @@ paths:
                 '422':
                     description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
 
-    /events/competitions/time-changed:
+    /events/competition/time-changed:
         post:
             summary: The start or end date or time of a competition was changed.
             requestBody:
@@ -75,7 +75,7 @@ paths:
                 '422':
                     description: Invalid message https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422
 
-    /events/competitors/list-published:
+    /events/competitor/list-published:
         post:
             summary: A new competitor list for a competition was published.
             requestBody:
