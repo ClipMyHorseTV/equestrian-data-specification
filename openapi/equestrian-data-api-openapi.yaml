@@ -85,7 +85,7 @@ paths:
                         schema:
                             allOf:
                                 - $ref: '#/components/schemas/CloudEvent'
-                                - $ref: '#/components/schemas/CompetitionPublishedData'
+                                - $ref: '#/components/schemas/CompetitorListPublishedData'
             responses:
                 '202':
                     description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
@@ -169,6 +169,7 @@ paths:
                                 example: org.equestriandata.competitor.withdrew
                             allOf:
                                 - $ref: '#/components/schemas/CloudEvent'
+                                - $ref: '#/components/schemas/CompetitorWithdrewData'
             responses:
                 '202':
                     description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
@@ -189,6 +190,7 @@ paths:
                                 example: org.equestriandata.competitor.rank-updated
                             allOf:
                                 - $ref: '#/components/schemas/CloudEvent'
+                                - $ref: '#/components/schemas/CompetitorRankUpdatedData'
             responses:
                 '202':
                     description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
@@ -209,6 +211,7 @@ paths:
                                 example: org.equestriandata.competition.start-order-changed
                             allOf:
                                 - $ref: '#/components/schemas/CloudEvent'
+                                - $ref: '#/components/schemas/CompetitionStartOrderChangedData'
             responses:
                 '202':
                     description: Event was accepted and will be processed https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202
@@ -226,6 +229,13 @@ components:
         CloudEvent:
             description: Cloud Events are a specification for describing event data in a common way.
             type: object
+            required:
+                - specversion
+                - type
+                - source
+                - id
+                - time
+                - datacontenttype
             properties:
                 specversion:
                     type: string
@@ -247,7 +257,7 @@ components:
                     type: string
                     format: date-time
                     description: Timestamp of when the event was produced.
-                    example: 2018-04-05T17:31:00Z
+                    example: "2007-11-25T17:31:00Z"
                 datacontenttype:
                     type: string
                     description: Content type of the event data.
@@ -268,6 +278,7 @@ components:
                 identifiers:
                     type: array
                     description: Identifiers of the person.
+                    minItems: 1
                     items:
                         $ref: '#/components/schemas/Identifier'
                 title:
@@ -290,7 +301,7 @@ components:
                     type: string
                     format: date-time
                     description: Date of birth of the person.
-                    example: "2007-03-01"
+                    example: "2007-11-25"
                 yearOfBirth:
                     type: integer
                     description: Year of birth of the person.
@@ -303,6 +314,8 @@ components:
 
         PreviousHorseName:
             type: object
+            required:
+                - name
             description: Previous name of the horse.
             properties:
                 name:
@@ -311,14 +324,14 @@ components:
                     example: "Secretariat"
                 fromDate:
                     type: string
-                    format: date-time
+                    format: date
                     description: Start date of the name.
-                    example: "2007-03-01"
+                    example: "2007-11-25"
                 toDate:
                     type: string
-                    format: date-time
+                    format: date
                     description: End date of the name.
-                    example: "2007-03-01"
+                    example: "2007-11-25"
 
         Horse:
             type: object
@@ -330,6 +343,7 @@ components:
                 identifiers:
                     type: array
                     description: Identifiers of the horse.
+                    minItems: 1
                     items:
                         $ref: '#/components/schemas/Identifier'
                 currentName:
@@ -343,9 +357,9 @@ components:
                         $ref: '#/components/schemas/PreviousHorseName'
                 dayOfBirth:
                     type: string
-                    format: date-time
+                    format: date
                     description: Date of birth of the person.
-                    example: "2007-03-01"
+                    example: "2007-11-25"
                 yearOfBirth:
                     type: integer
                     description: Year of birth of the person.
@@ -362,7 +376,7 @@ components:
         LastUpdatedOn:
             type: string
             format: date-time
-            example: "2007-03-01T13:00:00Z"
+            example: "2007-11-25T13:00:00Z"
             description: Timestamp of when the entity was last updated. [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
             externalDocs:
                 description: ISO 8601
@@ -393,6 +407,10 @@ components:
                     externalDocs:
                         description: IOC
                         url: https://en.wikipedia.org/wiki/List_of_IOC_country_codes
+            oneOf:
+                - required: [iso2]
+                - required: [iso3]
+                - required: [ioc]
 
         GeoLocation:
             type: object
@@ -412,6 +430,7 @@ components:
                     type: number
                     description: Longitude of the place.
                     example: 6.083862
+
         LocalizedText:
             type: object
             required:
@@ -430,9 +449,14 @@ components:
                     type: string
                     description: Localized text.
                     example: "Aachen"
+
         Identifier:
             type: object
             description: An identifier is a composite value object of the provider and a value of the identifier. The reason for that is that different systems use very different identifiers and transferring data from one system to another might involve cases in which more than one provider is required as well.
+            required:
+                - value
+                - type
+                - provider
             properties:
                 value:
                     type: string
@@ -460,16 +484,28 @@ components:
                 identifiers:
                     type: array
                     description: Identifiers of the competitor.
+                    minItems: 1
                     items:
                         $ref: '#/components/schemas/Identifier'
                 persons:
                     type: array
+                    minItems: 1
                     items:
                         $ref: '#/components/schemas/Person'
                 horses:
                     type: array
+                    minItems: 1
                     items:
                         $ref: '#/components/schemas/Horse'
+                startNumber:
+                    type: integer
+                    description: Start number of the competitor.
+                    example: 1
+                startTime:
+                    type: string
+                    format: date-time
+                    description: Start time of the competitor. [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
+                    example: 2007-11-25T13:00:00Z
                 rank:
                     type: integer
                     description: Rank of the competitor.
@@ -484,6 +520,7 @@ components:
                 identifiers:
                     type: array
                     description: Identifiers of the address.
+                    minItems: 1
                     items:
                         $ref: '#/components/schemas/Identifier'
                 addressLine:
@@ -519,11 +556,13 @@ components:
                 competitorIdentifiers:
                     type: array
                     description: Identifiers of the result.
+                    minItems: 1
                     items:
                         $ref: '#/components/schemas/Identifier'
                 resultIdentifiers:
                     type: array
                     description: Identifiers of the result.
+                    minItems: 1
                     items:
                         $ref: '#/components/schemas/Identifier'
                 scoreSchema:
@@ -574,6 +613,10 @@ components:
 
         JumpingScoreData:
             type: object
+            required:
+                - Score
+                - Rank
+                - PenaltyPoints
             properties:
                 Score:
                     type: number
@@ -590,38 +633,50 @@ components:
 
         EventPublishedData:
             type: object
+            required:
+                - data
             properties:
                 data:
                     type: object
                     description: Event payload.
+                    required:
+                        - EventIdentifiers
+                        - OrganizerIdentifiers
+                        - Name
+                        - StartDate
+                        - EndDate
                     properties:
-                        Identifiers:
+                        EventIdentifiers:
                             type: array
                             description: Identifiers of the event.
+                            minItems: 1
                             example: Aachen 2020
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         OrganizerIdentifiers:
                             type: array
                             description: Identifiers of the event organizer.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
-                        EventName:
+                        Name:
                             type: string
                             description: Name of the event.
                         Description:
-                            type: string
+                            type: array
                             description: Description of the event.
+                            items:
+                                $ref: '#/components/schemas/LocalizedText'
                         StartDate:
                             type: string
                             format: date-time
                             description: Start date of the event.
-                            example: 2007-03-01T13:00:00Z
+                            example: 2007-11-25T13:00:00Z
                         EndDate:
                             type: string
                             format: date-time
                             description: End date of the event.
-                            example: 2007-03-01T13:00:00Z
+                            example: 2007-11-25T13:00:00Z
                         Country:
                             type: object
                             description: Country where the event is held.
@@ -637,19 +692,28 @@ components:
 
         CompetitionPublishedData:
             type: object
+            required:
+                - data
             properties:
                 data:
                     type: object
                     description: Event payload.
+                    required:
+                        - CompetitionIdentifiers
+                        - EventIdentifiers
+                        - Name
+                        - StartDate
                     properties:
                         CompetitionIdentifiers:
                             type: array
                             description: Identifiers of the competition.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         EventIdentifiers:
                             type: array
                             description: Identifiers of the event.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         Name:
@@ -663,44 +727,48 @@ components:
                             description: Description of the competition.
                         StartDate:
                             type: string
-                            format: date-time
+                            format: date
                             description: Start date of the competition.
-                            example: 2007-03-01
+                            example: 2007-11-25
                         EndDate:
                             type: string
-                            format: date-time
+                            format: dat
                             description: End date of the competition.
-                            example: 2007-03-01
+                            example: 2007-11-25
                         StartTime:
                             type: string
                             format: date-time
                             description: Start time of the competition. [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
-                            example: 2007-03-01T13:00:00Z
+                            example: 2007-11-25T13:00:00Z
                         EndTime:
                             type: string
                             format: date-time
                             description: End time of the competition. [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
-                            example: 2007-03-01T13:00:00Z
+                            example: 2007-11-25T13:00:00Z
                         Discipline:
                             type: string
                             description: Discipline of the competition, free form text.
                         NormativeDiscipline:
-                            type: string
-                            description: Normative discipline of the competition.
-                            enum: [ShowJumping, Racing, NeedsToBeDefined]
+                            $ref: '#/components/schemas/NormativeDiscipline'
                         LastUpdatedOn:
                             $ref: '#/components/schemas/LastUpdatedOn'
 
-        CompetitorRankUpdated:
+        CompetitorRankUpdatedData:
             type: object
+            required:
+                - data
             properties:
                 data:
                     type: object
                     description: Event payload.
+                    required:
+                        - CompetitorIdentifiers
+                        - Rank
                     properties:
-                        CompetitionIdentifiers:
+                        CompetitorIdentifiers:
                             type: array
                             description: Identifiers of the competitor.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         Rank:
@@ -713,27 +781,39 @@ components:
                 data:
                     type: object
                     description: Event payload.
+                    required:
+                        - CompetitionIdentifiers
+                        - Competitors
                     properties:
                         CompetitionIdentifiers:
                             type: array
                             description: Identifiers of the competition.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         Competitors:
                             type: array
                             description: List of competitors.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Competitor'
 
         CompetitionTimeChangedData:
             type: object
+            required:
+                - data
             properties:
                 data:
                     type: object
                     description: Event payload.
+                    required:
+                        - CompetitionIdentifiers
+                        - StartTime
+                        - EndTime
                     properties:
                         CompetitionIdentifiers:
                             type: array
+                            minItems: 1
                             description: Identifiers of the competition.
                             items:
                                 $ref: '#/components/schemas/Identifier'
@@ -741,28 +821,36 @@ components:
                             type: string
                             format: date-time
                             description: Start time of the competition. [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
-                            example: 2007-03-01T13:00:00Z
+                            example: 2007-11-25T13:00:00Z
                         EndTime:
                             type: string
                             format: date-time
                             description: End time of the competition. [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
-                            example: 2007-03-01T13:00:00Z
+                            example: 2007-11-25T13:00:00Z
 
         ResultPublishedData:
             type: object
+            required:
+                - data
             properties:
                 data:
                     type: object
                     description: Event payload.
+                    required:
+                        - CompetitionIdentifiers
+                        - CompetitorIdentifiers
+                        - ScoreData
                     properties:
                         CompetitionIdentifiers:
                             type: array
                             description: Identifiers of the competition.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         CompetitorIdentifiers:
                             type: array
                             description: List of competitors.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         ScoreData:
@@ -770,33 +858,89 @@ components:
 
         CompetitorRemovedData:
             type: object
+            required:
+                - data
             properties:
                 data:
                     type: object
                     description: Event payload.
+                    required:
+                        - CompetitionIdentifiers
+                        - CompetitorIdentifiers
                     properties:
                         CompetitionIdentifiers:
                             type: array
                             description: Identifiers of the competition.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         CompetitorIdentifiers:
                             type: array
                             description: List of competitors.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
 
         CompetitorAddedData:
             type: object
+            required:
+                - data
             properties:
                 data:
                     type: object
                     description: Event payload.
+                    required:
+                        - CompetitionIdentifiers
+                        - Competitor
                     properties:
                         CompetitionIdentifiers:
                             type: array
                             description: Identifiers of the competition.
+                            minItems: 1
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         Competitor:
                             $ref: '#/components/schemas/Competitor'
+
+        CompetitorWithdrewData:
+            type: object
+            required:
+                - data
+            properties:
+                data:
+                    type: object
+                    description: Event payload.
+                    required:
+                        - CompetitorIdentifiers
+                    properties:
+                        CompetitorIdentifiers:
+                            type: array
+                            description: List of competitors.
+                            minItems: 1
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+
+        CompetitionStartOrderChangedData:
+            type: object
+            required:
+                - data
+            properties:
+                data:
+                    type: object
+                    description: Event payload.
+                    required:
+                        - CompetitionIdentifiers
+                        - StartOrder
+                    properties:
+                        CompetitionIdentifiers:
+                            type: array
+                            description: Identifiers of the competition.
+                            minItems: 1
+                            items:
+                                $ref: '#/components/schemas/Identifier'
+                        StartOrder:
+                            type: array
+                            description: List of competitors.
+                            minItems: 1
+                            items:
+                                $ref: '#/components/schemas/Identifier'

@@ -2,3 +2,4 @@
 node_modules
 asyncapi/docs
 openapi/docs
+/openapi/php-client/
