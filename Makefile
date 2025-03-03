@@ -22,4 +22,7 @@ async-validate:
 	npx asyncapi validate asyncapi/equestrian-data-api-asyncapi.yaml
 
 openapi-validate:
-	npx openapi-generator-cli validate -i openapi/equestrian-data-api-openapi.yaml
+	docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli validate -i /local/openapi/equestrian-data-api-openapi.yaml
+
+openapi-generate-php:
+	docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/openapi/equestrian-data-api-openapi.yaml -g php -o /local/openapi/php-client

@@ -766,9 +766,7 @@ components:
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         ScoreData:
-                            type: object
-                            description: Score data.
-                            schema: '#/components/schemas/ScoreData'
+                            $ref: '#/components/schemas/ScoreData'
 
         CompetitorRemovedData:
             type: object
@@ -801,6 +799,4 @@ components:
                             items:
                                 $ref: '#/components/schemas/Identifier'
                         Competitor:
-                            type: object
-                            description: Competitor entity.
                             $ref: '#/components/schemas/Competitor'
