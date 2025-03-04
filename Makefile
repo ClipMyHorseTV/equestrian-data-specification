@@ -9,17 +9,14 @@ help:
 	@echo "  async-validate         - Validate the AsyncAPI document"
 	@echo "  openapi-validate     - Validate the OpenAPI document"
 
-async-docs:
-	npx asyncapi generate fromTemplate asyncapi/equestrian-data-api-asyncapi.yaml @asyncapi/html-template -o ./asyncapi/docs
-
 openapi-docs:
-	npx openapi-generator-cli generate -i openapi/equestrian-data-api-openapi.yaml -g html -o ./openapi/docs
+	docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/openapi/equestrian-data-api-openapi.yaml -g html -o /local/openapi/docs
 
 async-studio:
-	npx asyncapi start studio -f asyncapi/equestrian-data-api-asyncapi.yaml
+	docker run -it -p 8000:80 asyncapi/studio
 
 async-validate:
-	npx asyncapi validate asyncapi/equestrian-data-api-asyncapi.yaml
+	docker run --rm -v ${PWD}:/local asyncapi/cli validate /local/asyncapi/equestrian-data-api-asyncapi.yaml
 
 openapi-validate:
 	docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli validate -i /local/openapi/equestrian-data-api-openapi.yaml
