@@ -2,6 +2,14 @@ openapi: 3.0.0
 info:
     title: Equestrian Data API
     version: 0.1.0
+    description: This is the API for the Equestrian Data API. It is used to notify about events in the horse sport world. There is one API endpoint per event type. The design decision behind this was to be able to generate and manage the events independently.
+    license:
+        name: Apache 2.0
+        url: https://www.apache.org/licenses/LICENSE-2.0.html
+    contact:
+        name: ClipMyHorse.TV
+        url: https://www.clipmyhorse.tv
+        email: info@clipmyhorse.tv
 
 servers:
     -   url: https://equestrian-data.clipmyhorse.tv
@@ -11,10 +19,20 @@ servers:
     -   url: http://equestrian-data.test
         description: Local development server
 
+tags:
+    - name: Events
+      description: Events related to horse sport.
+    - name: Competitors
+      description: Competitors in horse sport.
+    - name: Competitions
+      description: Competitions in horse sport.
+
 paths:
     /events/event/published:
         post:
             summary: Notification about a newly created horse sport event that didn't exist before in the system sending the event.
+            tags:
+              - Events
             requestBody:
                 required: true
                 content:
@@ -36,6 +54,8 @@ paths:
     /events/competition/published:
         post:
             summary: Notification about a newly created horse sport event that didn't exist before in the system sending the event.
+            tags:
+              - Competitions
             requestBody:
                 required: true
                 content:
@@ -56,6 +76,8 @@ paths:
 
     /events/competition/time-changed:
         post:
+            tags:
+              - Competitions
             summary: The start or end date or time of a competition was changed.
             requestBody:
                 required: true
@@ -78,6 +100,8 @@ paths:
     /events/competitor/list-published:
         post:
             summary: A new competitor list for a competition was published.
+            tags:
+              - Competitors
             requestBody:
                 required: true
                 content:
@@ -95,6 +119,8 @@ paths:
     /events/competitor/result-updated:
         post:
             summary: The result of a competitor in a competition was updated.
+            tags:
+              - Competitors
             requestBody:
                 required: true
                 content:
@@ -116,6 +142,8 @@ paths:
     /events/competitor/removed:
         post:
             summary: A competitor was removed from a competition.
+            tags:
+              - Competitors
             requestBody:
                 required: true
                 content:
@@ -137,6 +165,8 @@ paths:
     /events/competitor/added:
         post:
             summary: A competitor was added to a competition.
+            tags:
+              - Competitors
             requestBody:
                 required: true
                 content:
@@ -158,6 +188,8 @@ paths:
     /events/competitor/withdrew:
         post:
             summary: A competitor withdrew from a competition.
+            tags:
+              - Competitors
             requestBody:
                 required: true
                 content:
@@ -179,6 +211,8 @@ paths:
     /events/competitor/rank-updated:
         post:
             summary: The rank of a competitor in a competition was changed.
+            tags:
+              - Competitors
             requestBody:
                 required: true
                 content:
@@ -200,6 +234,8 @@ paths:
     /events/competition/start-order-changed:
         post:
             summary: The start order of a competition was changed.
+            tags:
+              - Competitions
             requestBody:
                 required: true
                 content:
